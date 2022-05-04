@@ -1,0 +1,42 @@
+.stories {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  .story {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+
+    .index {
+      width: 34px;
+      text-align: center;
+      color: var(--orange);
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .info__upper-side {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 2px;
+
+      .title {
+        color: black;
+      }
+
+      .url {
+        color: var(--gray);
+      }
+    }
+
+    .info__lower-side {
+      color: var(--gray);
+
+      .author, .comments {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+}
