@@ -19,7 +19,9 @@ export class ItemsComponent implements OnInit {
     let itemUrl = window.location.pathname + "stories";
 
     if(window.location.pathname == "/jobs") {
-      itemUrl = "jobstories";
+      itemUrl = "/jobstories";
+    } else if (window.location.pathname == "/") {
+      itemUrl = "/topstories";
     }
 
     this.repository.fetchItemsIds(itemUrl).subscribe({

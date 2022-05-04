@@ -13,6 +13,7 @@ export class NavbarComponent implements OnInit {
   @ViewChild('ask') askNavItem!: ElementRef;
   @ViewChild('show') showNavItem!: ElementRef;
   @ViewChild('jobs') jobsNavItem!: ElementRef;
+  @ViewChild('about') aboutNavItem!: ElementRef;
 
   constructor() {
   }
@@ -40,6 +41,9 @@ export class NavbarComponent implements OnInit {
         break;
       case "/jobs":
         this.jobsNavItem.nativeElement.classList.add("selected");
+        break;
+      case "/about":
+        this.aboutNavItem.nativeElement.classList.add("selected");
         break;
     }
   }

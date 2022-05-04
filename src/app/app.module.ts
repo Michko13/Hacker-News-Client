@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ItemsComponent } from './components/items/items.component';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { AboutComponent } from './components/about/about.component';
 
 const routes: Routes = [
   { path: '', component: ItemsComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'ask', component: ItemsComponent },
   { path: 'show', component: ItemsComponent },
   { path: 'jobs', component: ItemsComponent },
+  { path: 'about', component: AboutComponent },
 ];
 
 @NgModule({
@@ -24,6 +26,7 @@ const routes: Routes = [
     AppComponent,
     NavbarComponent,
     ItemsComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,

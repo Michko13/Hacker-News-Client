@@ -51,7 +51,7 @@ export class RepositoryService {
   }
 
   fetchItemsIds(storiesUrl: string): Observable<number[]> {
-    return this.http.get<number[]>(`${this.baseUrl}/${storiesUrl}.json?print=pretty`);
+    return this.http.get<number[]>(`${this.baseUrl}${storiesUrl}.json?print=pretty`);
   }
 
   private getItem(id: number): Observable<ItemModel> {

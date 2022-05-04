@@ -41,10 +41,6 @@ header {
       font-size: 18px;
       transition: all 0.3s ease;
 
-      .selected {
-        color: var(--orange);
-      }
-
       a {
         -webkit-filter: blur(0);
       }
@@ -57,6 +53,10 @@ header {
 
     .right-side {
       margin-left: auto;
+    }
+
+    .selected {
+      color: var(--orange);
     }
   }
 }
