@@ -2,43 +2,57 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ItemModel } from "../models/ItemModel";
+import { UserModel } from "../models/UserModel";
+import { ItemTypeEnum } from "../models/ItemTypeEnum";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RepositoryService {
   private baseUrl: string = "https://hacker-news.firebaseio.com/v0";
-  private page: number = 0;
-  private pageItemCount: number = 30;
+  private itemsLoaded: number = 0;
+
+  pageItemCount: number = 30;
+  page: number = 0;
   itemIds: number[];
   allItemsLoaded: boolean = false;
 
   constructor(private http: HttpClient) {
   }
 
-  fetchNextPage(): Observable<ItemModel[]> {
+  resetVariables(): void {
+    this.page = 0;
+    this.allItemsLoaded = false;
+  }
+
+  getNextPage(itemType: ItemTypeEnum): Observable<ItemModel[]> {
     let items: ItemModel[] = [];
     let itemIdsSliced = this.itemIds.slice(this.page * this.pageItemCount, this.page * this.pageItemCount + this.pageItemCount);
+    this.itemsLoaded += itemIdsSliced.length;
 
-    if (itemIdsSliced.length == 0) {
+    if (itemIdsSliced.length == 0 || this.itemsLoaded == this.itemIds.length) {
       this.allItemsLoaded = true;
     }
 
     return new Observable<ItemModel[]>(subscriber => {
       itemIdsSliced.forEach((id, index) => {
         this.getItem(id).subscribe({
-          next: (response: ItemModel) => {
-            if (response.url != null) {
-              // gets only the domain of the url
-              let regExp = new RegExp('^(?:https?:\\/\\/)?(?:[^@\\/\\n]+@)?(?:www\\.)?([^:\\/?\\n]+)');
-              response.urlShortened = response.url.match(regExp)![1];
+          next: (item: ItemModel) => {
+            // filters out inappropriate item types and dead/deleted items (story and job are same in this context)
+            if((itemType == ItemTypeEnum.Story && (item.type == "job" || item.type == "story"))
+              || (itemType == ItemTypeEnum.Comment && (item.type == "comment"))
+              && !item.deleted && !item.dead) {
+              if (item.url != null) {
+                // gets only the domain of the url
+                let regExp = new RegExp('^(?:https?:\\/\\/)?(?:[^@\\/\\n]+@)?(?:www\\.)?([^:\\/?\\n]+)');
+                item.urlShortened = item.url.match(regExp)![1];
+              }
+
+              // converts epoch time to ms
+              item.time *= 1000;
+              items.push(item);
             }
 
-            // converts epoch time to ms
-            response.time = response.time * 1000;
-            items.push(response);
-
-            // if its the last item to load, push the whole array to subscribers
             if (index == itemIdsSliced.length - 1) {
               subscriber.next(items);
             }
@@ -50,11 +64,15 @@ export class RepositoryService {
     })
   }
 
-  fetchItemsIds(storiesUrl: string): Observable<number[]> {
+  getItem(id: number): Observable<ItemModel> {
+    return this.http.get<ItemModel>(`${this.baseUrl}/item/${id}.json?print=pretty`);
+  }
+
+  getItemIds(storiesUrl: string): Observable<number[]> {
     return this.http.get<number[]>(`${this.baseUrl}${storiesUrl}.json?print=pretty`);
   }
 
-  private getItem(id: number): Observable<ItemModel> {
-    return this.http.get<ItemModel>(`${this.baseUrl}/item/${id}.json?print=pretty`);
+  getUser(id: string): Observable<UserModel> {
+    return this.http.get<UserModel>(`${this.baseUrl}/user/${id}.json?print=pretty`);
   }
 }
