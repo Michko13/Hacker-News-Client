@@ -21,7 +21,7 @@ export class CommentsComponent implements OnInit {
               private router: Router,
               private route: ActivatedRoute) {
     this.repository = repository;
-    repository.resetVariables();
+    this.repository.resetVariables();
 
     const storyId = parseInt(this.route.snapshot.paramMap.get('id')!);
     if (isNaN(storyId)) {
@@ -33,11 +33,15 @@ export class CommentsComponent implements OnInit {
         const navigation = this.router.getCurrentNavigation();
         if (navigation!.extras.state) {
           this.story = navigation!.extras.state['story'];
-          this.loadComments();
+          this.repository.itemIds = this.story.kids;
+          this.getNextPage();
         } else {
-          this.repository.getItem(storyId).subscribe((item) => {
-            this.story = item;
-            this.loadComments();
+          this.repository.itemIds[0] = storyId;
+          this.repository.getNextPage(ItemTypeEnum.Story).subscribe((items) => {
+            this.repository.resetVariables();
+            this.story = items[0];
+            this.repository.itemIds = this.story.kids;
+            this.getNextPage();
           });
         }
       }
@@ -45,17 +49,18 @@ export class CommentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  loadComments(): void {
-    this.repository.itemIds = this.story.kids;
-    this.repository.getNextPage(ItemTypeEnum.Comment).subscribe((items) => {
-      this.comments = items;
-    })
+  getNextPage(): void {
+    this.repository.getNextPage(ItemTypeEnum.Comment)
+      .subscribe((items) => {
+        this.comments = this.comments.concat(items);
+      });
   }
 
 }

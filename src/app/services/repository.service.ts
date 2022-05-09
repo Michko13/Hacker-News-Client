@@ -14,7 +14,7 @@ export class RepositoryService {
 
   pageItemCount: number = 30;
   page: number = 0;
-  itemIds: number[];
+  itemIds: number[] = [];
   allItemsLoaded: boolean = false;
 
   constructor(private http: HttpClient) {
@@ -22,6 +22,7 @@ export class RepositoryService {
 
   resetVariables(): void {
     this.page = 0;
+    this.itemsLoaded = 0;
     this.allItemsLoaded = false;
   }
 

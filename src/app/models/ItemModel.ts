@@ -4,6 +4,7 @@ export class ItemModel {
   type: string;
   by: string;
   time: number;
+  text: string;
   dead: boolean;
   parent: number;
   kids: number[];

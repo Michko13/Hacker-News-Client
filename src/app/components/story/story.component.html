@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="index">{{ index }}</div>
+  <div *ngIf="index != 0" class="index">{{ index }}</div>
   <div class="info">
     <a href="{{ story.url }}" class="info__upper-side">
       <div class="title">{{ story.title }}</div>

@@ -1,11 +1,13 @@
 <section class="container"
          infiniteScroll
-         (scrolled)="loadComments()"
+         (scrolled)="getNextPage()"
          [scrollWindow]="false">
+  <app-story *ngIf="story" [story]="story" [index]="0" class="story"></app-story>
+  <hr>
   <div class="items">
-    <div *ngFor="let comment of comments" class="story">
+    <div *ngFor="let comment of comments">
       <app-comment [comment]="comment"></app-comment>
     </div>
   </div>
-  <!-- <div *ngIf="!repository.allItemsLoaded" [ngStyle]="{'margin-top': stories.length != 0 ? '30px' : '10px'}" class="loader"></div> -->
+  <div *ngIf="!repository.allItemsLoaded" [ngStyle]="{'margin-top': comments.length != 0 ? '30px' : '10px'}" class="loader"></div>
 </section>
