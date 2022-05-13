@@ -10,28 +10,27 @@ import { ItemTypeEnum } from "../models/ItemTypeEnum";
 })
 export class RepositoryService {
   private baseUrl: string = "https://hacker-news.firebaseio.com/v0";
-  private itemsLoaded: number = 0;
 
   pageItemCount: number = 30;
   page: number = 0;
   itemIds: number[] = [];
   allItemsLoaded: boolean = false;
+  numberOfItemsPushed: number = 0;
+  numberOfItemsCycledThrough: number = 0;
 
   constructor(private http: HttpClient) {
   }
 
   resetVariables(): void {
     this.page = 0;
-    this.itemsLoaded = 0;
     this.allItemsLoaded = false;
   }
 
   getNextPage(itemType: ItemTypeEnum): Observable<ItemModel[]> {
     let items: ItemModel[] = [];
     let itemIdsSliced = this.itemIds.slice(this.page * this.pageItemCount, this.page * this.pageItemCount + this.pageItemCount);
-    this.itemsLoaded += itemIdsSliced.length;
 
-    if (itemIdsSliced.length == 0 || this.itemsLoaded == this.itemIds.length) {
+    if (itemIdsSliced.length == 0) {
       this.allItemsLoaded = true;
     }
 
@@ -39,10 +38,13 @@ export class RepositoryService {
       itemIdsSliced.forEach((id, index) => {
         this.getItem(id).subscribe({
           next: (item: ItemModel) => {
+            this.numberOfItemsCycledThrough++;
+
             // filters out inappropriate item types and dead/deleted items (story and job are same in this context)
-            if((itemType == ItemTypeEnum.Story && (item.type == "job" || item.type == "story"))
-              || (itemType == ItemTypeEnum.Comment && (item.type == "comment"))
+            if(((itemType == ItemTypeEnum.Story && (item.type == "job" || item.type == "story"))
+              || (itemType == ItemTypeEnum.Comment && (item.type == "comment")))
               && !item.deleted && !item.dead) {
+
               if (item.url != null) {
                 // gets only the domain of the url
                 let regExp = new RegExp('^(?:https?:\\/\\/)?(?:[^@\\/\\n]+@)?(?:www\\.)?([^:\\/?\\n]+)');
@@ -51,7 +53,14 @@ export class RepositoryService {
 
               // converts epoch time to ms
               item.time *= 1000;
+
               items.push(item);
+              this.numberOfItemsPushed++;
+            }
+
+            if(this.numberOfItemsCycledThrough >= this.itemIds.length) {
+              this.allItemsLoaded = true;
+              console.log(this.numberOfItemsCycledThrough);
             }
 
             if (index == itemIdsSliced.length - 1) {

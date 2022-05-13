@@ -1,5 +1,4 @@
-<section class="container"
-         infiniteScroll
+<section infiniteScroll
          (scrolled)="getNextPage()"
          [scrollWindow]="false">
   <app-story *ngIf="story" [story]="story" [index]="0" class="story"></app-story>

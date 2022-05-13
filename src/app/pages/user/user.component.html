@@ -1,21 +1,12 @@
 <section *ngIf="user">
-  <h3 class="id">{{ user.id }}</h3>
-  <div class="created-ago">Created {{ user.created | timeago }}</div>
-  <div class="karma">Karma {{ user.karma }}</div>
-  About:
-  <div class="about" [innerHTML]="user.about"></div>
-  <hr>
-  <h4>Submissions:</h4>
-  <div class="submitted">
-    <div class="items"
-         infiniteScroll
-         (scrolled)="onScroll()"
-         [scrollWindow]="false">
-      <div *ngFor="let story of stories; let i = index">
-        <app-story [story]="story" [index]="i + 1"></app-story>
-      </div>
-      <div *ngIf="!repository.allItemsLoaded" class="loader"></div>
-    </div>
+  <div class="info">
+    <h3>{{ user.id }}</h3>
+    <div>Created {{ user.created | timeago }}</div>
+    <div>{{ user.karma }} karma</div>
+    <h4>About:  </h4>
+    <div [innerHTML]="user.about"></div>
   </div>
-  <h4>Comments:</h4>
+  <hr>
+  <a [routerLink]="['submissions']">Submissions</a>
+  <a>Comments</a>
 </section>

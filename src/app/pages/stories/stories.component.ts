@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RepositoryService } from "../../services/repository.service";
 import { ItemModel } from "../../models/ItemModel";
-import { NavigationEnd, Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { ItemTypeEnum } from "../../models/ItemTypeEnum";
 
@@ -15,41 +15,61 @@ export class StoriesComponent implements OnInit {
 
   repository: RepositoryService;
   stories: ItemModel[] = [];
+  userId: string = "";
+  isUserSubmissions: boolean = false;
 
   constructor(repository: RepositoryService,
-              private router: Router) {
+              private router: Router,
+              private route: ActivatedRoute) {
     this.repository = repository;
     this.repository.resetVariables();
 
-    this.subscription = router.events.subscribe((event => {
-      if (event instanceof NavigationEnd) {
-        let itemUrl = window.location.pathname + "stories";
+    this.userId = this.route.snapshot.paramMap.get('id') ?? "";
 
-        if (window.location.pathname == "/jobs") {
-          itemUrl = "/jobstories";
-        }
+    if (!this.userId) {
+      let itemUrl = router.url + "stories";
 
-        this.repository.getItemIds(itemUrl)
-          .subscribe((itemIds) => {
-            this.repository.itemIds = itemIds;
-            this.getNextPage();
-          });
+      if (router.url == "/jobs") {
+        itemUrl = "/jobstories";
       }
-    }));
+
+      this.repository.getItemIds(itemUrl)
+        .subscribe((itemIds) => {
+          this.repository.itemIds = itemIds;
+          this.getNextPage();
+        });
+    } else {
+      this.repository.getUser(this.userId).subscribe((user) => {
+        this.repository.itemIds = user.submitted;
+        this.isUserSubmissions = true;
+
+        console.log(user);
+
+        this.getNextPage();
+      });
+    }
   }
 
   ngOnInit(): void {
-
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if(this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   getNextPage(): void {
     this.repository.getNextPage(ItemTypeEnum.Story)
       .subscribe((items) => {
-        this.stories = this.stories.concat(items)
+        this.stories = this.stories.concat(items);
+
+        if(this.repository.numberOfItemsPushed < this.repository.pageItemCount &&
+          this.repository.numberOfItemsCycledThrough < this.repository.itemIds.length) {
+          this.getNextPage();
+        } else {
+          this.repository.numberOfItemsPushed = 0;
+        }
       });
   }
 

@@ -1,8 +1,23 @@
-.items {
-  max-height: 800px;
-  overflow-y: auto;
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .karma {
+    color: var(--orange);
+  }
 }
 
-.loader {
-  margin-top: 15px;
+a {
+  display: block;
+  width: 140px;
+  padding: 8px;
+  margin-bottom: 16px;
+  background-color: var(--orange);
+  border-radius: 6px;
+  color: white;
+  text-align: center;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
 }

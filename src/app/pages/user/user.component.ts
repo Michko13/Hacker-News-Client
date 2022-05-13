@@ -22,7 +22,6 @@ export class UserComponent implements OnInit {
     this.repository.resetVariables();
   }
 
-  /* Bug, check user hunglee2 */
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('id') ?? "";
 
@@ -33,15 +32,15 @@ export class UserComponent implements OnInit {
 
       this.repository.itemIds = user.submitted;
 
-      this.fetchNextPage();
+      this.getNextPage();
     });
   }
 
   onScroll(): void {
-    this.fetchNextPage();
+    this.getNextPage();
   }
 
-  private fetchNextPage(): void {
+  private getNextPage(): void {
     this.repository.getNextPage(ItemTypeEnum.Story)
       .subscribe((items) => {
         this.stories = this.stories.concat(items);

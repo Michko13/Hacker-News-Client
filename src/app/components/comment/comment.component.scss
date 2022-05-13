@@ -1,8 +1,8 @@
 .container {
   font-size: 15px;
 
-  .info, a {
-    color: var(--gray);
+  .info {
+    margin-bottom: 6px;
 
     .author {
       text-decoration: underline;
@@ -10,20 +10,11 @@
     }
   }
 
-  .info {
-    margin-bottom: 6px;
+  .info, a {
+    color: var(--gray);
   }
-
-
 
   .items {
     gap: 0;
   }
-
-  /*.thread-line {
-    width: 1px;
-    background-color: var(--gray);
-    margin-right: 30px;
-  }*/
-
 }

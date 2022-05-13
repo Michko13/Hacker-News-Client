@@ -24,6 +24,7 @@ const routes: Routes = [
   { path: 'jobs', component: StoriesComponent },
   { path: 'about', component: AboutComponent },
   { path: 'user/:id', component: UserComponent },
+  { path: 'user/:id/submissions', component: StoriesComponent },
   { path: 'comments/:id', component: CommentsComponent },
   { path: '**', redirectTo: 'top', pathMatch: 'full' }
 ];

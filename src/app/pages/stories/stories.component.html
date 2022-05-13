@@ -1,5 +1,4 @@
-<section class="container"
-         infiniteScroll
+<section infiniteScroll
          (scrolled)="getNextPage()"
          [scrollWindow]="false">
   <div class="items">
@@ -8,8 +7,13 @@
     </div>
   </div>
   <div *ngIf="!repository.allItemsLoaded" [ngStyle]="{'margin-top': stories.length != 0 ? '30px' : '10px'}" class="loader"></div>
-  <div *ngIf="repository.allItemsLoaded" class="end-text">
+  <div *ngIf="repository.allItemsLoaded && !isUserSubmissions" class="end-text">
     This is all the stories the official API gave me.
+    Checkout the official site <a href="https://news.ycombinator.com" class="official-site">news.ycombinator.com</a>
+    if you want to see more.
+  </div>
+  <div *ngIf="repository.allItemsLoaded && stories.length === 0 && isUserSubmissions" class="end-text">
+    Looks like this user has not submitted any stories or the API didn't give me any.
     Checkout the official site <a href="https://news.ycombinator.com" class="official-site">news.ycombinator.com</a>
     if you want to see more.
   </div>
