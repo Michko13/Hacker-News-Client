@@ -44,7 +44,6 @@ export class StoriesComponent implements OnInit {
         this.isUserSubmissions = true;
 
         console.log(user);
-
         this.getNextPage();
       });
     }
@@ -64,11 +63,12 @@ export class StoriesComponent implements OnInit {
       .subscribe((items) => {
         this.stories = this.stories.concat(items);
 
-        if(this.repository.numberOfItemsPushed < this.repository.pageItemCount &&
-          this.repository.numberOfItemsCycledThrough < this.repository.itemIds.length) {
-          this.getNextPage();
-        } else {
-          this.repository.numberOfItemsPushed = 0;
+        if(this.isUserSubmissions && !this.repository.allItemsLoaded) {
+          if(this.repository.itemsPushed <= this.repository.pageItemCount) {
+            this.getNextPage();
+          } else {
+            this.repository.itemsPushed = 0;
+          }
         }
       });
   }

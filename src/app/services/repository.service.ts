@@ -15,8 +15,7 @@ export class RepositoryService {
   page: number = 0;
   itemIds: number[] = [];
   allItemsLoaded: boolean = false;
-  numberOfItemsPushed: number = 0;
-  numberOfItemsCycledThrough: number = 0;
+  itemsPushed: number = 0;
 
   constructor(private http: HttpClient) {
   }
@@ -38,8 +37,6 @@ export class RepositoryService {
       itemIdsSliced.forEach((id, index) => {
         this.getItem(id).subscribe({
           next: (item: ItemModel) => {
-            this.numberOfItemsCycledThrough++;
-
             // filters out inappropriate item types and dead/deleted items (story and job are same in this context)
             if(((itemType == ItemTypeEnum.Story && (item.type == "job" || item.type == "story"))
               || (itemType == ItemTypeEnum.Comment && (item.type == "comment")))
@@ -55,12 +52,7 @@ export class RepositoryService {
               item.time *= 1000;
 
               items.push(item);
-              this.numberOfItemsPushed++;
-            }
-
-            if(this.numberOfItemsCycledThrough >= this.itemIds.length) {
-              this.allItemsLoaded = true;
-              console.log(this.numberOfItemsCycledThrough);
+              this.itemsPushed++;
             }
 
             if (index == itemIdsSliced.length - 1) {
