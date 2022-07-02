@@ -2,8 +2,7 @@
   <div *ngIf="index != 0" class="index">{{ index }}</div>
   <div class="info">
     <a href="{{ story.url }}" class="info__upper-side">
-      <div class="title">{{ story.title }}</div>
-      <div *ngIf="story.url != null" class="url">({{ story.urlShortened }})</div>
+      <div class="title">{{ story.title }} <span *ngIf="story.url != null" class="url">({{ story.urlShortened }})</span> </div>
     </a>
     <div class="info__lower-side">
         <span *ngIf="story.type != 'job'">
@@ -11,7 +10,7 @@
         </span>
       by <a class="author" [routerLink]="['/user', story.by ]">{{ story.by }}</a> {{ story.time | timeago }}
       <span *ngIf="story.type != 'job'">
-            | <a class="comments" [routerLink]="['/comments', story.id]" [state]="{ story: story }">{{ story.descendants }} comments</a>
+        <span class="second-separator">| </span> <a class="comments" [routerLink]="['/comments', story.id]" [state]="{ story: story }">{{ story.descendants }} comments</a>
       </span>
     </div>
   </div>

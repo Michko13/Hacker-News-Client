@@ -4,11 +4,17 @@
   gap: 22px;
 
   .index {
-    width: 34px;
+    min-width: 34px;
     text-align: center;
     color: var(--orange);
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 600;
+
+    @media (max-width: 700px) {
+      min-width: 16px;
+      max-width: 16px;
+      font-size: 1.1rem;
+    }
   }
 
   .info__upper-side {
@@ -35,6 +41,22 @@
     .author, .comments {
       text-decoration: underline;
       cursor: pointer;
+    }
+
+    /*.comments {
+      white-space: nowrap;
+    }*/
+
+    @media (max-width: 700px) {
+      .second-separator {
+        display: none;
+      }
+
+      .comments:before {
+        content: '\a';
+        white-space: pre;
+      }
+
     }
   }
 }
