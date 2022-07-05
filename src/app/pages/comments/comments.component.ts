@@ -33,15 +33,23 @@ export class CommentsComponent implements OnInit {
         const navigation = this.router.getCurrentNavigation();
         if (navigation!.extras.state) {
           this.story = navigation!.extras.state['story'];
-          this.repository.itemIds = this.story.kids;
-          this.getNextPage();
+          if(this.story.kids) {
+            this.repository.itemIds = this.story.kids;
+            this.getNextPage();
+          } else {
+            this.repository.allItemsLoaded = true;
+          }
         } else {
           this.repository.itemIds[0] = storyId;
           this.repository.getNextPage(ItemTypeEnum.Story).subscribe((items) => {
             this.repository.resetVariables();
             this.story = items[0];
-            this.repository.itemIds = this.story.kids;
-            this.getNextPage();
+            if(this.story.kids) {
+              this.repository.itemIds = this.story.kids;
+              this.getNextPage();
+            } else {
+              this.repository.allItemsLoaded = true;
+            }
           });
         }
       }
@@ -49,7 +57,6 @@ export class CommentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
   ngOnDestroy(): void {
